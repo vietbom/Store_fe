@@ -1,0 +1,76 @@
+import React, { useEffect } from 'react'
+import { Route, Routes, Navigate } from 'react-router-dom'
+import HeaderStore from './components/HeaderStore'
+import FooterStore from './components/FooterStore'
+import Loading from './components/Loading'
+import Introduction from './components/Introduction'
+import Product from './components/Product'
+import Detail from './components/Detail'
+import PDM from './components/Admin/PDM'
+import ProtectedRoute from './components/ProtectedRoute'
+import Login from './components/Login'
+import { useAuthStore } from './apis/Auth'
+
+function App() {
+  const { checkAuth, isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  // Redirect based on user type
+  const getHomeRoute = () => {
+    if (!isAuthenticated) return '/login';
+    return user?.position === 'admin' ? '/admin/home' : '/user/home';
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <HeaderStore />
+
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Loading />} />
+        <Route path="/about" element={<Introduction />} />
+        <Route path="/products" element={<Product />} />
+        <Route path="/products/:id" element={<Detail />} />
+        
+        {/* Auth Routes */}
+        <Route 
+          path="/login" 
+          element={
+            isAuthenticated ? (
+              <Navigate to={getHomeRoute()} replace />
+            ) : (
+              <Login />
+            )
+          } 
+        />
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          {/* User Routes */}
+          <Route path="/user">
+            <Route path="home" element={<Loading />} />
+            {/* Add more user routes here */}
+          </Route>
+        </Route>
+
+        {/* Admin Routes */}
+        <Route element={<ProtectedRoute requireAdmin />}>
+          <Route path="/admin">
+            <Route path="home" element={<PDM />} />
+            {/* Add more admin routes here */}
+          </Route>
+        </Route>
+
+        {/* Catch all route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
+      <FooterStore />
+    </div>
+  )
+}
+
+export default App
