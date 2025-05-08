@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Lock, User, Eye, EyeOff } from 'lucide-react';
-import { useAuthStore } from '../apis/Auth';
+import { useAuthStore } from '../../apis/Auth';
 
-const Login: React.FC = () => {
+const LoginAdmin: React.FC = () => {
     const [showPsw, setShowPsw] = useState<boolean>(false);
     const [formData, setFormData] = useState({
-        email: '',
+        userName: '',
         password: '',
     });
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || '/';
 
     const { login, loading, error: authError, user, isAuthenticated } = useAuthStore();
 
@@ -21,7 +19,7 @@ const Login: React.FC = () => {
             if (user.position === 'admin') {
                 navigate('/admin/home', { replace: true });
             } else {
-                navigate('/user/home', { replace: true });
+                navigate('/login', { replace: true });
             }
         }
     }, [isAuthenticated, user, navigate]);
@@ -42,9 +40,9 @@ const Login: React.FC = () => {
         setError(null);
 
         try {
-            await login(formData.email, formData.password, false);
+            await login(formData.userName, formData.password, true);
         } catch (err) {
-            setError('Đăng nhập thất bại!');
+            setError('Đăng nhập Admin thất bại!');
         }
     };
 
@@ -53,7 +51,7 @@ const Login: React.FC = () => {
             <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl overflow-hidden">
                 <div className="p-8 md:p-10">
                     <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-                        Đăng nhập
+                        Đăng nhập tài khoản Admin
                     </h2>
                     {error && (
                         <div className="mb-4 p-3 bg-red-100 border-red-200 text-red-700 rounded-lg flex items-center text-sm">
@@ -64,23 +62,23 @@ const Login: React.FC = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                                Email
+                            <label htmlFor="userName" className="block text-sm font-medium text-gray-700 mb-1">
+                                Tên đăng nhập
                             </label>
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <User className="w-5 h-5 text-gray-400" />
                                 </span>
                                 <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
+                                    type="text"
+                                    id="userName"
+                                    name="userName"
                                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    placeholder="Nhập email..."
-                                    value={formData.email}
+                                    placeholder="Nhập tên đăng nhập..."
+                                    value={formData.userName}
                                     onChange={handleChange}
                                     required
-                                    autoComplete="email"
+                                    autoComplete="username"
                                     disabled={loading}
                                 />
                             </div>
@@ -121,23 +119,6 @@ const Login: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex justify-between mt-4 text-sm text-gray-600">
-                            <button
-                                type="button"
-                                className="text-blue-600 hover:underline"
-                                onClick={() => navigate('/forgot-password')}
-                            >
-                                Quên mật khẩu?
-                            </button>
-                            <button
-                                type="button"
-                                className="text-blue-600 hover:underline"
-                                onClick={() => navigate('/register')}
-                            >
-                                Đăng ký tài khoản
-                            </button>
-                        </div>
-
                         <div>
                             <button
                                 type="submit"
@@ -169,7 +150,7 @@ const Login: React.FC = () => {
                                         Đang đăng nhập
                                     </>
                                 ) : (
-                                    'Đăng nhập'
+                                    'Đăng nhập Admin'
                                 )}
                             </button>
                         </div>
@@ -180,4 +161,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default LoginAdmin; 

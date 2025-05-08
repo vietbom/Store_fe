@@ -152,8 +152,239 @@ const Detail: React.FC = () => {
               </div>
             )}
             {activeTab === 'specs' && (
-              <div>
-                <p className='text-gray-500 italic'>Nội dung thông số kỹ thuật sẽ được cập nhật sớm.</p>
+              <div className='space-y-6'>
+                {currentProduct.spec ? (
+                  <>
+                    {/* Thông tin chung */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Thông tin chung</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.general?.manufacturer && (
+                          <div>
+                            <span className='font-medium'>Nhà sản xuất:</span> {currentProduct.spec.general.manufacturer}
+                          </div>
+                        )}
+                        {currentProduct.spec.general?.model && (
+                          <div>
+                            <span className='font-medium'>Model:</span> {currentProduct.spec.general.model}
+                          </div>
+                        )}
+                        {currentProduct.spec.general?.releaseYear && (
+                          <div>
+                            <span className='font-medium'>Năm sản xuất:</span> {currentProduct.spec.general.releaseYear}
+                          </div>
+                        )}
+                        {currentProduct.spec.general?.warranty && (
+                          <div>
+                            <span className='font-medium'>Bảo hành:</span> {currentProduct.spec.general.warranty}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Màn hình */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Màn hình</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.display?.size && (
+                          <div>
+                            <span className='font-medium'>Kích thước:</span> {currentProduct.spec.display.size}
+                          </div>
+                        )}
+                        {currentProduct.spec.display?.resolution && (
+                          <div>
+                            <span className='font-medium'>Độ phân giải:</span> {currentProduct.spec.display.resolution}
+                          </div>
+                        )}
+                        {currentProduct.spec.display?.panelType && (
+                          <div>
+                            <span className='font-medium'>Loại màn hình:</span> {currentProduct.spec.display.panelType}
+                          </div>
+                        )}
+                        {currentProduct.spec.display?.refreshRate && (
+                          <div>
+                            <span className='font-medium'>Tần số quét:</span> {currentProduct.spec.display.refreshRate}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* CPU */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Bộ xử lý</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.processor?.brand && (
+                          <div>
+                            <span className='font-medium'>Hãng:</span> {currentProduct.spec.processor.brand}
+                          </div>
+                        )}
+                        {currentProduct.spec.processor?.modelName && (
+                          <div>
+                            <span className='font-medium'>Model:</span> {currentProduct.spec.processor.modelName}
+                          </div>
+                        )}
+                        {currentProduct.spec.processor?.cores && (
+                          <div>
+                            <span className='font-medium'>Số nhân:</span> {currentProduct.spec.processor.cores}
+                          </div>
+                        )}
+                        {currentProduct.spec.processor?.threads && (
+                          <div>
+                            <span className='font-medium'>Số luồng:</span> {currentProduct.spec.processor.threads}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* RAM */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>RAM</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.ram?.type?.capacity && (
+                          <div>
+                            <span className='font-medium'>Dung lượng:</span> {currentProduct.spec.ram.type.capacity}
+                          </div>
+                        )}
+                        {currentProduct.spec.ram?.type?.type && (
+                          <div>
+                            <span className='font-medium'>Loại RAM:</span> {currentProduct.spec.ram.type.type}
+                          </div>
+                        )}
+                        {currentProduct.spec.ram?.type?.speed && (
+                          <div>
+                            <span className='font-medium'>Tốc độ:</span> {currentProduct.spec.ram.type.speed}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Ổ cứng */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Lưu trữ</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.storage?.type?.type && (
+                          <div>
+                            <span className='font-medium'>Loại ổ cứng:</span> {currentProduct.spec.storage.type.type}
+                          </div>
+                        )}
+                        {currentProduct.spec.storage?.type?.capacity && (
+                          <div>
+                            <span className='font-medium'>Dung lượng:</span> {currentProduct.spec.storage.type.capacity}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Card đồ họa */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Card đồ họa</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.graphics?.type?.type && (
+                          <div>
+                            <span className='font-medium'>Loại:</span> {currentProduct.spec.graphics.type.type}
+                          </div>
+                        )}
+                        {currentProduct.spec.graphics?.type?.brand && (
+                          <div>
+                            <span className='font-medium'>Hãng:</span> {currentProduct.spec.graphics.type.brand}
+                          </div>
+                        )}
+                        {currentProduct.spec.graphics?.type?.model && (
+                          <div>
+                            <span className='font-medium'>Model:</span> {currentProduct.spec.graphics.type.model}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Pin */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Pin</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.battery?.capacity && (
+                          <div>
+                            <span className='font-medium'>Dung lượng:</span> {currentProduct.spec.battery.capacity}
+                          </div>
+                        )}
+                        {currentProduct.spec.battery?.life && (
+                          <div>
+                            <span className='font-medium'>Thời lượng:</span> {currentProduct.spec.battery.life}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Hệ điều hành */}
+                    {currentProduct.spec.operatingSystem?.name && (
+                      <div className='border-b border-gray-200 pb-4'>
+                        <h3 className='text-lg font-semibold mb-3'>Hệ điều hành</h3>
+                        <div>
+                          <span className='font-medium'>OS:</span> {currentProduct.spec.operatingSystem.name}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Kết nối */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Kết nối</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.connectivity?.wifi && (
+                          <div>
+                            <span className='font-medium'>Wi-Fi:</span> {currentProduct.spec.connectivity.wifi}
+                          </div>
+                        )}
+                        {currentProduct.spec.connectivity?.bluetooth && (
+                          <div>
+                            <span className='font-medium'>Bluetooth:</span> {currentProduct.spec.connectivity.bluetooth}
+                          </div>
+                        )}
+                        {currentProduct.spec.connectivity?.ports && currentProduct.spec.connectivity.ports.length > 0 && (
+                          <div className='col-span-2'>
+                            <span className='font-medium'>Cổng kết nối:</span>
+                            <ul className='list-disc list-inside mt-1'>
+                              {currentProduct.spec.connectivity.ports.map((port, index) => (
+                                <li key={index}>{port}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Camera */}
+                    <div className='border-b border-gray-200 pb-4'>
+                      <h3 className='text-lg font-semibold mb-3'>Camera</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.camera?.front && (
+                          <div>
+                            <span className='font-medium'>Camera trước:</span> {currentProduct.spec.camera.front}
+                          </div>
+                        )}
+                        {currentProduct.spec.camera?.rear && (
+                          <div>
+                            <span className='font-medium'>Camera sau:</span> {currentProduct.spec.camera.rear}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Kích thước & Trọng lượng */}
+                    <div>
+                      <h3 className='text-lg font-semibold mb-3'>Kích thước & Trọng lượng</h3>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {currentProduct.spec.itemWeight?.weight && (
+                          <div>
+                            <span className='font-medium'>Trọng lượng:</span> {currentProduct.spec.itemWeight.weight}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Chưa có thông số kỹ thuật cho sản phẩm này.</p>
+                  </div>
+                )}
               </div>
             )}
             {activeTab === 'review' && (

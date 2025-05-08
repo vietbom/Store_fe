@@ -25,8 +25,18 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requir
         return <Navigate to="/" replace />;
     }
 
-    // If children are provided, render them, otherwise render Outlet
-    return children ? <>{children}</> : <Outlet />;
+    // If user is admin and trying to access admin routes, allow access
+    if (user?.position === 'admin' && location.pathname.startsWith('/admin')) {
+        return children ? <>{children}</> : <Outlet />;
+    }
+
+    // For regular users, allow access to non-admin routes
+    if (!requireAdmin && user?.position !== 'admin') {
+        return children ? <>{children}</> : <Outlet />;
+    }
+
+    // Default fallback
+    return <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute; 

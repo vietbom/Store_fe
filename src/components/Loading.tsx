@@ -22,7 +22,7 @@ const Loading = () => {
                 </div>
 
                 <div className='flex flex-col gap-3 sm:flex-row'>
-                    <Link to='product' className={primaryButtonStyles}>
+                    <Link to='products' className={primaryButtonStyles}>
                         Mua sắm ngay
                     </Link>
                     <Link to='voucher' className={secondaryButtonStyles}>
@@ -33,7 +33,7 @@ const Loading = () => {
 
             <div className='flex justify-center'>
                 <img
-                    src='/src/assets/icon/link-12257_512.gif'
+                    src='https://res.cloudinary.com/dxbjy97kr/image/upload/v1746720561/link-12257_512_derknp.gif'
                     width={600}
                     height={338}
                     className='mx-auto aspect-video overflow-hidden rounded-xl object-contain object-center sm:w-full'

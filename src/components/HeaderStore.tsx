@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Login from './Login';     
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../apis/Auth';
+import { useProductStore } from '../apis/Product';
 
 const HeaderStore: React.FC = () => {
   const navLinkStyle =
@@ -13,10 +14,12 @@ const HeaderStore: React.FC = () => {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const navigate = useNavigate();
   const location = useLocation();
 
   const { user, isAuthenticated, loading, logout, checkAuth } = useAuthStore();
+  const { getSearchProducts } = useProductStore();
 
   useEffect(() => {
     checkAuth();
@@ -58,6 +61,23 @@ const HeaderStore: React.FC = () => {
     }
   };
 
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      try {
+        await getSearchProducts(searchTerm.trim());
+        // Chuyển hướng đến route tìm kiếm tương ứng với vai trò
+        if (isAdmin) {
+          navigate(`/admin/search?q=${encodeURIComponent(searchTerm.trim())}`);
+        } else {
+          navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+        }
+      } catch (error) {
+        console.error("Search error:", error);
+      }
+    }
+  };
+
   const headerTopHeightRem = 4;
   const headerBottomHeightRem = 2.75;
   const totalHeaderHeightRem = headerTopHeightRem + headerBottomHeightRem;
@@ -81,14 +101,16 @@ const HeaderStore: React.FC = () => {
               <span className="text-green-900">Duc Viet Store</span>
             </Link>
             <div className="flex items-center gap-4">
-              <div className="relative hidden md:block">
+              <form onSubmit={handleSearch} className="relative hidden md:block">
                 <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
                 <input
                   type="search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Tìm kiếm sản phẩm..."
                   className="pl-8 pr-2 py-1.5 w-[200px] lg:w-[300px] border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                 />
-              </div>
+              </form>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-green-900 font-medium">
                   Chào, {displayName}
@@ -107,7 +129,6 @@ const HeaderStore: React.FC = () => {
     );
   }
 
-  // Render toàn bộ header cho user thường hoặc chưa đăng nhập
   return (
     <>
       <header className="sticky top-0 z-40 bg-white shadow-sm">
@@ -117,14 +138,16 @@ const HeaderStore: React.FC = () => {
               <span className="text-green-900">Duc Viet Store</span>
             </Link>
             <div className="flex items-center gap-4">
-              <div className="relative hidden md:block">
+              <form onSubmit={handleSearch} className="relative hidden md:block">
                 <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
                 <input
                   type="search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Tìm kiếm sản phẩm..."
                   className="pl-8 pr-2 py-1.5 w-[200px] lg:w-[300px] border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                 />
-              </div>
+              </form>
               {isLoggedIn ? (
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-green-900 font-medium">

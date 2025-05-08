@@ -22,7 +22,7 @@ const Introduction: React.FC = () => {
           </div>
           <div className="relative">
             <img
-              src="/src/assets/icon/web.jpg"
+              src="https://res.cloudinary.com/dxbjy97kr/image/upload/v1746719998/web_abgg3z.jpg"
               alt="DucVietStore showcase"
               className="w-full h-96 object-cover rounded-lg shadow-lg"
             />
@@ -127,20 +127,21 @@ const Introduction: React.FC = () => {
           <h2 className="text-4xl font-bold text-gray-900 mb-8">Đối tác của chúng tôi</h2>
           <div className="flex flex-wrap gap-6">
             {[
-              { src: '/src/assets/icon/apple.png', alt: 'Apple logo' },
-              { src: '/src/assets/icon/samsung.png', alt: 'Samsung logo' },
-              { src: '/src/assets/icon/del.jpg', alt: 'Dell logo' },
-              { src: '/src/assets/icon/acer.jpg', alt: 'Acer logo' },
-              { src: '/src/assets/icon/lenovo.jpg', alt: 'Lenovo logo' },
-              { src: '/src/assets/icon/msi.jpg', alt: 'MSI logo' },
-              { src: '/src/assets/icon/xiaomi.jpg', alt: 'Xiaomi logo' },
-              { src: '/src/assets/icon/logitech.png', alt: 'Xiaomi logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746719997/apple_kheby2.png', alt: 'Apple logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746719997/samsung_u4okqw.png', alt: 'Samsung logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746719999/del_v66iew.jpg', alt: 'Dell logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746719997/acer_xsbqvm.jpg', alt: 'Acer logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746720021/lenovo_yax6tu.jpg', alt: 'Lenovo logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746719997/msi_yeezuw.jpg', alt: 'MSI logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746720380/xiaomi_lnkndl.jpg', alt: 'Xiaomi logo' },
+              { src: 'https://res.cloudinary.com/dxbjy97kr/image/upload/v1746720006/logitech_xjy2wc.png', alt: 'Logitech logo' },
             ].map((partner, index) => (
               <img
                 key={index}
                 src={partner.src}
                 alt={partner.alt}
                 className="h-14 object-contain transition-transform hover:scale-105"
+                loading="lazy"
               />
             ))}
           </div>

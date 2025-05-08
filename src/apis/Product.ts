@@ -1,20 +1,90 @@
 import { create } from 'zustand';
 import { axiosInstance } from '../lib/axios';
 
-interface Product {
-    _id?: string;    
-    MaSP: string;
-    productName: string;
-    price: number;      
-    SoLuong: number;     
-    image?: string;      
-    type: string;
-    details: string;
+export interface SpecType {
+    general: {
+        manufacturer?: string;
+        model?: string;
+        releaseYear?: string;
+        color?: string[];
+        material?: string;
+        warranty?: string;
+    };
+    display: {
+        size?: string;
+        resolution?: string;
+        panelType?: string;
+        refreshRate?: string;
+        brightness?: string;
+        colorGamut?: string;
+        features?: string[];
+    };
+    processor: {
+        brand?: string;
+        series?: string;
+        modelName?: string;
+        cores?: string;
+        threads?: string;
+        cache?: string;
+    };
+    ram: {
+        type: {
+            capacity?: string;
+            type?: string;
+            speed?: string;
+        };
+    };
+    storage: {
+        type: {
+            type?: string;
+            capacity?: string;
+        };
+    };
+    graphics: {
+        type: {
+            type?: string;
+            brand?: string;
+            model?: string;
+        };
+    };
+    battery: {
+        capacity?: string;
+        life?: string;
+        charging?: string;
+    };
+    operatingSystem: {
+        name?: string;
+    };
+    connectivity: {
+        wifi?: string;
+        bluetooth?: string;
+        ports?: string[];
+    };
+    camera: {
+        front?: string;
+        rear?: string;
+        features?: string[];
+    };
+    itemWeight: {
+        weight?: string;
+    };
 }
 
-type NewProductData = Omit<Product, '_id' | 'image'> & { image?: string };
+export interface Product {
+    _id?: string;
+    MaSP: string;
+    productName: string;
+    price: number;
+    SoLuong: number;
+    type: string;
+    details: string;
+    image?: string;
+    spec?: SpecType;
+}
 
-type UpdateProductData = Partial<Omit<Product, '_id' | 'MaSP'>> & { image?: string };
+type NewProductData = Omit<Product, '_id'>;
+
+type UpdateProductData = Partial<Omit<Product, '_id' | 'MaSP'>>;
 
 interface ProductState {
     products: Product[];

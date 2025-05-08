@@ -9,6 +9,9 @@ import Detail from './components/Detail'
 import PDM from './components/Admin/PDM'
 import ProtectedRoute from './components/ProtectedRoute'
 import Login from './components/Login'
+import LoginAdmin from './components/Admin/LoginAdmin'
+import SearchResult from './components/SearchResult'
+import AdminSearchResult from './components/Admin/AdminSearchResult'
 import { useAuthStore } from './apis/Auth'
 
 function App() {
@@ -34,6 +37,7 @@ function App() {
         <Route path="/about" element={<Introduction />} />
         <Route path="/products" element={<Product />} />
         <Route path="/products/:id" element={<Detail />} />
+        <Route path="/search" element={<SearchResult />} />
         
         {/* Auth Routes */}
         <Route 
@@ -43,6 +47,17 @@ function App() {
               <Navigate to={getHomeRoute()} replace />
             ) : (
               <Login />
+            )
+          } 
+        />
+
+        <Route 
+          path="/admin/login" 
+          element={
+            isAuthenticated ? (
+              <Navigate to={getHomeRoute()} replace />
+            ) : (
+              <LoginAdmin />
             )
           } 
         />
@@ -60,6 +75,8 @@ function App() {
         <Route element={<ProtectedRoute requireAdmin />}>
           <Route path="/admin">
             <Route path="home" element={<PDM />} />
+            <Route path="search" element={<AdminSearchResult />} />
+            <Route path="products/edit/:id" element={<PDM />} />
             {/* Add more admin routes here */}
           </Route>
         </Route>
