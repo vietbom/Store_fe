@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X } from 'lucide-react'; 
+import { Search, Menu, X, ShoppingCart } from 'lucide-react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import Login from './Login';     
+import Login from './User/Login';  
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../apis/Auth';
 import { useProductStore } from '../apis/Product';
@@ -153,6 +153,12 @@ const HeaderStore: React.FC = () => {
                   <span className="text-sm text-green-900 font-medium">
                     Chào, {displayName}
                   </span>
+                  <Link 
+                    to="/user/cart"
+                    className="text-green-900 hover:text-green-700 transition-colors relative"
+                  >
+                    <ShoppingCart size={24} />
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="px-3 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors text-xs font-medium"

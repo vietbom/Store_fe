@@ -3,6 +3,7 @@ import { axiosInstance } from '../lib/axios';
 
 interface User {
     _id: string;
+    MaKH?: string;
     userName: string;
     email: string;
     position?: string;  // For admin
@@ -34,10 +35,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 password 
             });
             
-            // Ensure the user object has the correct position
+            // Ensure the user object has the correct position and data
             const userData = {
                 ...response.data,
-                position: isAdmin ? 'admin' : undefined
+                position: isAdmin ? 'admin' : undefined,
+                MaKH: isAdmin ? undefined : response.data.MaKH
             };
 
             set({
@@ -85,7 +87,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         try {
             // Try admin check first
             try {
-                const adminResponse = await axiosInstance.get('/admin/check');
+                const adminResponse = await axiosInstance.get('/api/admin/check');
                 set({
                     user: { ...adminResponse.data, position: 'admin' },
                     isAuthenticated: true,
@@ -95,20 +97,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 return;
             } catch {
                 // If admin check fails, try user check
-                const userResponse = await axiosInstance.get('/user/check');
+                const userResponse = await axiosInstance.get('/api/user/check');
+                if (!userResponse.data || !userResponse.data.MaKH) {
+                    throw new Error('Invalid user data received');
+                }
+                
+                console.log('User check response:', userResponse.data);
                 set({
-                    user: userResponse.data,
+                    user: {
+                        ...userResponse.data,
+                        MaKH: userResponse.data.MaKH // Ensure MaKH is explicitly set
+                    },
                     isAuthenticated: true,
                     loading: false,
                     error: null
                 });
             }
         } catch (error: any) {
+            console.error('Auth check error:', error);
             set({
                 user: null,
                 isAuthenticated: false,
                 loading: false,
-                error: null
+                error: error.message || 'Authentication failed'
             });
         }
     }

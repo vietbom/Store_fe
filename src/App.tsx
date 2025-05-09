@@ -8,11 +8,14 @@ import Product from './components/Product'
 import Detail from './components/Detail'
 import PDM from './components/Admin/PDM'
 import ProtectedRoute from './components/ProtectedRoute'
-import Login from './components/Login'
+import Login from './components/User/Login'
 import LoginAdmin from './components/Admin/LoginAdmin'
 import SearchResult from './components/SearchResult'
 import AdminSearchResult from './components/Admin/AdminSearchResult'
 import { useAuthStore } from './apis/Auth'
+import SignUp from './components/User/SignUp'
+import ShoppingCartResult from './components/User/ShoppingCartResult'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
   const { checkAuth, isAuthenticated, user } = useAuthStore();
@@ -29,6 +32,7 @@ function App() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Toaster position="top-right" />
       <HeaderStore />
 
       <Routes>
@@ -52,6 +56,17 @@ function App() {
         />
 
         <Route 
+          path="/register" 
+          element={
+            isAuthenticated ? (
+              <Navigate to={getHomeRoute()} replace />
+            ) : (
+              <SignUp />
+            )
+          } 
+        />
+
+        <Route 
           path="/admin/login" 
           element={
             isAuthenticated ? (
@@ -67,6 +82,7 @@ function App() {
           {/* User Routes */}
           <Route path="/user">
             <Route path="home" element={<Loading />} />
+            <Route path="cart" element={<ShoppingCartResult />} />
             {/* Add more user routes here */}
           </Route>
         </Route>

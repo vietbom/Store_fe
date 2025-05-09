@@ -1,22 +1,57 @@
 import { RefreshCw, ShieldCheck, ShoppingCart, Truck } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useProductStore } from '../apis/Product'
+import { useUserStore } from '../apis/User'
+import { useAuthStore } from '../apis/Auth'
+import { toast } from 'react-hot-toast'
 
 type Tab = 'description' | 'specs' | 'review'
 
 const Detail: React.FC = () => {
   const { id } = useParams<{id: string}>()
+  const navigate = useNavigate()
   const { currentProduct, loading, error, getProduct } = useProductStore()
+  const { addProductToCart } = useUserStore()
+  const { user, isAuthenticated } = useAuthStore()
   const [selectedColor, setSelectedColor] = useState<string | null>(null)
   const [quantity, setQuantity] = useState<number>(1)
   const [activeTab, setActiveTab] = useState<Tab>('description')
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
 
   useEffect(() => {
     if (id) {
       getProduct({ _id: id })
     }
   }, [id, getProduct])
+
+  const handleAddToCart = async () => {
+    if (!isAuthenticated || !user) {
+      toast.error('Vui lòng đăng nhập để thêm vào giỏ hàng');
+      navigate('/login');
+      return;
+    }
+
+    if (!currentProduct) {
+      toast.error('Không tìm thấy thông tin sản phẩm');
+      return;
+    }
+
+    try {
+      setIsAddingToCart(true);
+      const result = await addProductToCart(currentProduct.MaSP, quantity);
+      if (result) {
+        toast.success('Đã thêm sản phẩm vào giỏ hàng');
+      } else {
+        toast.error('Không thể thêm sản phẩm vào giỏ hàng');
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Có lỗi xảy ra khi thêm vào giỏ hàng');
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
 
   // Hàm định dạng giá tiền theo định dạng Việt Nam
   const formatPrice = (price: number) => {
@@ -96,8 +131,17 @@ const Detail: React.FC = () => {
                 </div>
             </div>
 
-            <button className='w-full flex items-center justify-center bg-green-500 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg text-lg mb-6 transition duration-150'>
-              <ShoppingCart size={20} className='mr-2'/> Thêm vào giỏ hàng 
+            <button 
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+              className={`w-full flex items-center justify-center ${
+                isAddingToCart 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-green-500 hover:bg-green-700'
+              } text-white font-semibold py-3 px-6 rounded-lg text-lg mb-6 transition duration-150`}
+            >
+              <ShoppingCart size={20} className='mr-2'/>
+              {isAddingToCart ? 'Đang thêm...' : 'Thêm vào giỏ hàng'}
             </button>
 
             <div className='space-y-3 mb-8 p-4 border border-gray-200 rounded-lg text-gray-700'>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AlertCircle, Lock, User, Eye, EyeOff } from 'lucide-react';
-import { useAuthStore } from '../apis/Auth';
+import { useAuthStore } from '../../apis/Auth';
 
 const Login: React.FC = () => {
     const [showPsw, setShowPsw] = useState<boolean>(false);
