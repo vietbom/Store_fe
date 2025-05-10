@@ -15,7 +15,7 @@ interface CartProduct {
   product: {
     _id: string;
     MaSP: string;
-    name: string;
+    productName: string;
     price: number;
     image?: string;
   };
@@ -44,6 +44,10 @@ interface UserState {
   updateCartItem: (MaSP: string, soLuong: number) => Promise<ShoppingCart | null>;
   removeFromCart: (MaSP: string) => Promise<ShoppingCart | null>;
   clearCart: () => Promise<boolean>;
+
+  // Profile management functions
+  getProfile: () => Promise<RegularUser | null>;
+  updateProfile: (data: Partial<RegularUser>) => Promise<RegularUser | null>;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -56,7 +60,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   checkAuth: async () => {
     set({ isCheckAuth: true });
     try {
-      const res = await axiosInstance.get<RegularUser>("/api/user/check"); 
+      const res = await axiosInstance.get<RegularUser>("/user/check"); 
       if (!res.data || !res.data.MaKH) {
         console.error('Invalid user data received:', res.data);
         set({ authUser: null });
@@ -123,7 +127,7 @@ export const useUserStore = create<UserState>((set, get) => ({
       }
 
       console.log('Adding to cart:', { MaSP, MaKH: user.MaKH, soLuong });
-      const res = await axiosInstance.post<ShoppingCart>('/api/user/cart/add', {
+      const res = await axiosInstance.post<ShoppingCart>('/user/cart/add', {
         MaSP,
         MaKH: user.MaKH,
         soLuong
@@ -182,25 +186,37 @@ export const useUserStore = create<UserState>((set, get) => ({
       }
 
       console.log('Updating cart item:', { MaSP, MaKH: user.MaKH, soLuong });
-      const res = await axiosInstance.put<ShoppingCart>('/api/user/cart/update', {
+      const response = await axiosInstance.put<ShoppingCart>('/user/cart/update', {
         MaSP,
         MaKH: user.MaKH,
         soLuong
       });
 
-      if (!res.data) {
-        console.error('Update cart failed: No data in response');
+      console.log('Update cart response:', response);
+      
+      if (response.status === 200 && response.data) {
+        console.log('Update cart success, updating state');
+        // Update cart state with new data
+        set((state) => ({
+          ...state,
+          cart: response.data,
+          isLoadingCart: false
+        }));
+        return response.data;
+      } else {
+        console.error('Update cart failed with status:', response.status);
+        set({ isLoadingCart: false });
         return null;
       }
-
-      console.log('Update cart success:', res.data);
-      set({ cart: res.data });
-      return res.data;
-    } catch (error) {
-      console.error('Update cart error:', error);
-      return null;
-    } finally {
+    } catch (error: any) {
+      console.error('Update cart error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers
+      });
       set({ isLoadingCart: false });
+      return null;
     }
   },
 
@@ -213,21 +229,26 @@ export const useUserStore = create<UserState>((set, get) => ({
         return null;
       }
 
-      console.log('Removing from cart:', { MaSP, MaKH: user.MaKH });
-      const res = await axiosInstance.delete<ShoppingCart>('/api/user/cart/remove', {
-        data: { MaSP, MaKH: user.MaKH }
-      });
-
-      if (!res.data) {
-        console.error('Remove from cart failed: No data in response');
+      console.log('Removing product from cart:', { MaSP, MaKH: user.MaKH });
+      const response = await axiosInstance.delete<ShoppingCart>(`/user/cart/remove/${MaSP}`);
+      
+      console.log('Remove from cart response:', response);
+      
+      if (response.status === 200 && response.data) {
+        console.log('Remove from cart success');
+        set({ cart: response.data });
+        return response.data;
+      } else {
+        console.error('Remove from cart failed with status:', response.status);
         return null;
       }
-
-      console.log('Remove from cart success:', res.data);
-      set({ cart: res.data });
-      return res.data;
-    } catch (error) {
-      console.error('Remove from cart error:', error);
+    } catch (error: any) {
+      console.error('Remove from cart error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers
+      });
       return null;
     } finally {
       set({ isLoadingCart: false });
@@ -244,18 +265,54 @@ export const useUserStore = create<UserState>((set, get) => ({
       }
 
       console.log('Clearing cart for user:', user.MaKH);
-      await axiosInstance.delete('/api/user/cart/clear', {
-        data: { MaKH: user.MaKH }
+      const response = await axiosInstance.delete('/user/cart/clear', {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-
-      console.log('Clear cart success');
-      set({ cart: null });
-      return true;
-    } catch (error) {
-      console.error('Clear cart error:', error);
+      
+      console.log('Clear cart response:', response);
+      
+      if (response.status === 200) {
+        console.log('Clear cart success');
+        set({ cart: null });
+        return true;
+      } else {
+        console.error('Clear cart failed with status:', response.status);
+        return false;
+      }
+    } catch (error: any) {
+      console.error('Clear cart error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers
+      });
       return false;
     } finally {
       set({ isLoadingCart: false });
     }
-  }
+  },
+
+  // Profile management functions
+  getProfile: async () => {
+    try {
+      const res = await axiosInstance.get<RegularUser>('/user/profile');
+      return res.data;
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      return null;
+    }
+  },
+
+  updateProfile: async (data: Partial<RegularUser>) => {
+    try {
+      const res = await axiosInstance.put<RegularUser>('/user/profile/update', data);
+      set({ authUser: res.data });
+      return res.data;
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      return null;
+    }
+  },
 }));

@@ -16,6 +16,7 @@ import { useAuthStore } from './apis/Auth'
 import SignUp from './components/User/SignUp'
 import ShoppingCartResult from './components/User/ShoppingCartResult'
 import { Toaster } from 'react-hot-toast'
+import InfoProfile from './components/User/InfoProfile'
 
 function App() {
   const { checkAuth, isAuthenticated, user } = useAuthStore();
@@ -82,8 +83,8 @@ function App() {
           {/* User Routes */}
           <Route path="/user">
             <Route path="home" element={<Loading />} />
+            <Route path="profile" element={<InfoProfile />} />
             <Route path="cart" element={<ShoppingCartResult />} />
-            {/* Add more user routes here */}
           </Route>
         </Route>
 
@@ -93,7 +94,6 @@ function App() {
             <Route path="home" element={<PDM />} />
             <Route path="search" element={<AdminSearchResult />} />
             <Route path="products/edit/:id" element={<PDM />} />
-            {/* Add more admin routes here */}
           </Route>
         </Route>
 

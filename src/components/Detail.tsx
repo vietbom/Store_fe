@@ -8,6 +8,21 @@ import { toast } from 'react-hot-toast'
 
 type Tab = 'description' | 'specs' | 'review'
 
+const colorMapping: Record<string, string> = {
+  'Đỏ': '#991b1b',
+  'Xanh dương': '#1e40af',
+  'Đen': '#111827',
+  'Trắng': '#ffffff',
+  'Xám': '#4b5563',
+  'Vàng': '#fef3c7',
+  'Hồng': '#be185d',
+  'Tím': '#6b21a8',
+  'Xanh lá': '#166534',
+  'Cam': '#c2410c',
+  'Nâu': '#78350f',
+  'Bạc': '#9ca3af'
+};
+
 const Detail: React.FC = () => {
   const { id } = useParams<{id: string}>()
   const navigate = useNavigate()
@@ -94,13 +109,52 @@ const Detail: React.FC = () => {
             <img
               src={currentProduct.image || 'https://via.placeholder.com/500'}
               alt={currentProduct.productName}
-              className='w-full h-auto max-h-[500px] object-contain rounded-lg border border-black-200'
+              className={`w-full h-auto max-h-[500px] object-contain rounded-lg border-4 transition-all duration-300 ${
+                selectedColor 
+                  ? 'border-opacity-100 shadow-lg' 
+                  : 'border-opacity-0'
+              }`}
+              style={{ 
+                borderColor: selectedColor ? colorMapping[selectedColor] || selectedColor.toLowerCase() : 'transparent',
+                boxShadow: selectedColor ? `0 0 15px ${colorMapping[selectedColor] || selectedColor.toLowerCase()}40` : 'none'
+              }}
             />
           </div>
 
           <div className='w-full lg:w-3/5'>
             <h1 className='text-3xl font-bold text-gray-800 mb-2'>{currentProduct.productName}</h1>
             <p className='text-3xl font-semibold text-green-600 mb-6'>{formatPrice(currentProduct.price)}</p>
+            
+            <div className='mb-6'>
+              <h4 className='text-sm font-semibold text-gray-600 mb-2'>Màu sắc:</h4>
+              <div className='flex items-center gap-2'>
+                {currentProduct?.spec?.general?.color && currentProduct?.spec?.general?.color.length > 0 ? (
+                  <div className='flex items-center gap-2'>
+                    {currentProduct.spec.general.color.map((color, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedColor(color)}
+                        className={`flex items-center gap-1 p-2 rounded-lg border transition-all ${
+                          selectedColor === color 
+                            ? 'border-green-500 bg-green-50' 
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div 
+                          className='w-6 h-6 rounded-full border border-gray-300'
+                          style={{ backgroundColor: colorMapping[color] || color.toLowerCase() }}
+                        />
+                        <div className='flex flex-col items-start'>
+                          <span className='font-normal text-gray-700'>{color}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <span className='font-normal text-gray-500'>Chưa có thông tin màu sắc</span>
+                )}
+              </div>
+            </div>
 
             <div className='mb-6'>
               <h4 className='text-sm font-semibold text-gray-600 mb-2'>Mã sản phẩm: <span className='font-normal'>{currentProduct.MaSP}</span></h4>

@@ -50,18 +50,65 @@ const ShoppingCartResult = () => {
     }, [cart])
 
     const handleUpdateQuantity = async (MaSP: string, currentSoLuong: number, increment: boolean) => {
-        const newSoLuong = increment ? currentSoLuong + 1 : currentSoLuong - 1
-        if (newSoLuong >= 0) {
-            await updateCartItem(MaSP, newSoLuong)
+        try {
+            const newSoLuong = increment ? currentSoLuong + 1 : currentSoLuong - 1;
+            if (newSoLuong >= 0) {
+                console.log('Updating quantity:', { MaSP, currentSoLuong, newSoLuong });
+                const updatedCart = await updateCartItem(MaSP, newSoLuong);
+                
+                if (!updatedCart) {
+                    console.error('Failed to update cart item');
+                    setError('Không thể cập nhật số lượng. Vui lòng thử lại sau.');
+                    return;
+                }
+
+                // No need to refresh cart as updateCartItem already updates the state
+                console.log('Cart updated successfully');
+            }
+        } catch (err) {
+            console.error('Error updating quantity:', err);
+            setError('Đã xảy ra lỗi khi cập nhật số lượng. Vui lòng thử lại sau.');
         }
     }
 
     const handleRemoveItem = async (MaSP: string) => {
-        await removeFromCart(MaSP)
+        try {
+            console.log('Removing item from cart:', MaSP);
+            const updatedCart = await removeFromCart(MaSP);
+            
+            if (!updatedCart) {
+                console.error('Failed to remove item from cart');
+                setError('Không thể xóa sản phẩm. Vui lòng thử lại sau.');
+                return;
+            }
+
+            console.log('Item removed successfully');
+        } catch (err) {
+            console.error('Error removing item:', err);
+            setError('Đã xảy ra lỗi khi xóa sản phẩm. Vui lòng thử lại sau.');
+        }
     }
 
     const handleClearCart = async () => {
-        await clearCart()
+        try {
+            console.log('Starting clear cart process...');
+            const success = await clearCart();
+            console.log('Clear cart result:', success);
+            
+            if (success) {
+                // Refresh cart after clearing
+                if (user?.MaKH) {
+                    console.log('Refreshing cart for user:', user.MaKH);
+                    await getCart(user.MaKH);
+                }
+            } else {
+                console.error('Clear cart failed');
+                setError('Không thể xóa giỏ hàng. Vui lòng thử lại sau.');
+            }
+        } catch (err) {
+            console.error('Error in handleClearCart:', err);
+            setError('Đã xảy ra lỗi khi xóa giỏ hàng. Vui lòng thử lại sau.');
+        }
     }
 
     if (error) {
@@ -135,14 +182,14 @@ const ShoppingCartResult = () => {
                                     <div className="w-24 h-24 flex-shrink-0">
                                         <img
                                             src={item.product.image || '/placeholder.png'}
-                                            alt={item.product.name}
+                                            alt={item.product.productName}
                                             className="w-full h-full object-cover rounded"
                                         />
                                     </div>
 
                                     {/* Thông tin sản phẩm */}
                                     <div className="ml-6 flex-1">
-                                        <h3 className="text-lg font-semibold">{item.product.name}</h3>
+                                        <h3 className="text-lg font-semibold">{item.product.productName}</h3>
                                         <p className="text-gray-600">Mã SP: {item.product.MaSP}</p>
                                         <p className="text-lg font-semibold text-green-600">
                                             {item.product.price.toLocaleString('vi-VN')}đ

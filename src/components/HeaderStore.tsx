@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X, ShoppingCart } from 'lucide-react'; 
+import { Search, Menu, X, ShoppingCart, UserCircle } from 'lucide-react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Login from './User/Login';  
 import Sidebar from './Sidebar'
@@ -150,6 +150,12 @@ const HeaderStore: React.FC = () => {
               </form>
               {isLoggedIn ? (
                 <div className="flex items-center gap-3">
+                  <Link 
+                    to="/user/profile"
+                    className="text-green-900 hover:text-green-700 transition-colors"
+                  >
+                    <UserCircle size={20} />
+                  </Link>
                   <span className="text-sm text-green-900 font-medium">
                     Chào, {displayName}
                   </span>
