@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useProductStore } from '../apis/Product';
+import { useProductStore } from '../../apis/Product';
 import { Link } from 'react-router-dom';
 
 const SearchResult: React.FC = () => {

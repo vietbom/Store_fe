@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useProductStore } from '../apis/Product'
+import { useProductStore } from '../../apis/Product'
 
 interface Category {
   id: string;
@@ -207,15 +207,6 @@ const Product: React.FC = () => {
           </div>
 
           <div className='flex items-center gap-3 mt-4 md:mt-0'>
-            <div className='relative'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400'/>
-              <input
-                type='search'
-                placeholder='Tìm kiếm sản phẩm...'
-                className='pl-9 pr-3 py-2 w-full md:w-[250px] lg:w-[300px] border border-gray-300 rounded-md 
-                bg-white text-sm focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500'
-              />
-            </div>
             <select className='border border-gray-300 rounded-md py-2 px-3 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500'>
               <option>Mới nhất</option>
               <option>Giá: Thấp đến cao</option>

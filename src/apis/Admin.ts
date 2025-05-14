@@ -25,7 +25,7 @@ export const useAdminStore = create<AdminState>((set) => ({
   checkAuth: async () => {
     set({ isCheckAuth: true });
     try {
-      const res = await axiosInstance.get<AdminUser>("/admin/check");
+      const res = await axiosInstance.get<AdminUser>("/admin/checkAuth");
       set({ authUserAdmin: res.data });
     } catch (error) {
       console.log("Error in admin checkAuth:", error);

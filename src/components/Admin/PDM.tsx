@@ -395,7 +395,6 @@ const PDM = () => {
                 ))}
             </div>
 
-            {/* Pagination */}
             {totalPages > 1 && (
                 <div className="flex justify-center mt-6 gap-2">
                     <button
@@ -460,7 +459,7 @@ const PDM = () => {
                                             name="MaSP"
                                             value={formData.MaSP}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-3 py-2 border-gray-300 shadow-sm"
                                             required
                                         />
                                     </div>
@@ -471,7 +470,7 @@ const PDM = () => {
                                             name="productName"
                                             value={formData.productName}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-3 py-2 border-gray-300 shadow-sm"
                                             required
                                         />
                                     </div>
@@ -482,7 +481,7 @@ const PDM = () => {
                                             name="price"
                                             value={formData.price}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-3 py-2 border-gray-300 shadow-sm"
                                         />
                                     </div>
                                     <div>
@@ -492,7 +491,7 @@ const PDM = () => {
                                             name="SoLuong"
                                             value={formData.SoLuong}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-3 py-2 border-gray-300 shadow-sm"
                                         />
                                     </div>
                                     <div>
@@ -517,7 +516,7 @@ const PDM = () => {
                                             name="details"
                                             value={formData.details}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-3 py-2 border-gray-300 shadow-sm"
                                             rows={3}
                                         />
                                     </div>
@@ -528,7 +527,7 @@ const PDM = () => {
                                             name="image"
                                             value={formData.image || ''}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-3 py-2 border-gray-300 shadow-sm"
                                         />
                                     </div>
                                 </>

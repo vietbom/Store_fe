@@ -60,17 +60,15 @@ export const useUserStore = create<UserState>((set, get) => ({
   checkAuth: async () => {
     set({ isCheckAuth: true });
     try {
-      const res = await axiosInstance.get<RegularUser>("/user/check"); 
+      const res = await axiosInstance.get<RegularUser>("/user/checkCustomer"); 
       if (!res.data || !res.data.MaKH) {
         console.error('Invalid user data received:', res.data);
         set({ authUser: null });
         return;
       }
-      
-      console.log('User data received:', res.data);
+      console.log('FE: checkAuth thành công', res.data);
       set({ authUser: res.data });
       
-      // Automatically fetch cart for authenticated user
       if (res.data.MaKH) {
         try {
           const cartRes = await axiosInstance.get<ShoppingCart>(`/api/user/cart/${res.data.MaKH}`);

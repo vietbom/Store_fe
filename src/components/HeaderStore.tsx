@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Menu, X, ShoppingCart, UserCircle } from 'lucide-react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Login from './User/Login';  
-import Sidebar from './Sidebar'
+import Sidebar from './User/Sidebar'
 import { useAuthStore } from '../apis/Auth';
 import { useProductStore } from '../apis/Product';
 

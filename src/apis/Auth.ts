@@ -21,8 +21,8 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-    user: null,
-    isAuthenticated: false,
+    user: JSON.parse(localStorage.getItem('user') || 'null'),  // Load user data from localStorage
+    isAuthenticated: localStorage.getItem('isAuthenticated') === 'true', // Check if authenticated from localStorage
     loading: false,
     error: null,
 
@@ -41,6 +41,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 position: isAdmin ? 'admin' : undefined,
                 MaKH: isAdmin ? undefined : response.data.MaKH
             };
+
+            // Store user in localStorage
+            localStorage.setItem('user', JSON.stringify(userData));
+            localStorage.setItem('isAuthenticated', 'true');
 
             set({
                 user: userData,
@@ -65,6 +69,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             const currentUser = get().user;
             const endpoint = currentUser?.position === 'admin' ? '/admin/logout' : '/user/logout';
             await axiosInstance.post(endpoint);
+
+            // Remove user data from localStorage
+            localStorage.removeItem('user');
+            localStorage.removeItem('isAuthenticated');
+
             set({
                 user: null,
                 isAuthenticated: false,
@@ -83,44 +92,55 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
 
     checkAuth: async () => {
+        console.log("checkAuth() called");
         set({ loading: true, error: null });
+
+        // Check if user is already authenticated in localStorage
+        if (get().isAuthenticated && get().user) {
+            set({ loading: false });
+            return;
+        }
+
         try {
-            // Try admin check first
+            const adminResponse = await axiosInstance.get('/admin/checkAdmin');
+            console.log("Admin auth success:", adminResponse.data);
+
+            // Store user data and authentication status
+            localStorage.setItem('user', JSON.stringify({ ...adminResponse.data, position: 'admin' }));
+            localStorage.setItem('isAuthenticated', 'true');
+
+            set({
+                user: { ...adminResponse.data, position: 'admin' },
+                isAuthenticated: true,
+                loading: false,
+                error: null
+            });
+            return; 
+
+        } catch {
             try {
-                const adminResponse = await axiosInstance.get('/api/admin/check');
+                const userResponse = await axiosInstance.get('/user/checkCustomer');
+                console.log("User auth success:", userResponse.data);
+
+                // Store user data and authentication status
+                localStorage.setItem('user', JSON.stringify({ ...userResponse.data, MaKH: userResponse.data.MaKH }));
+                localStorage.setItem('isAuthenticated', 'true');
+
                 set({
-                    user: { ...adminResponse.data, position: 'admin' },
+                    user: { ...userResponse.data, MaKH: userResponse.data.MaKH },
                     isAuthenticated: true,
                     loading: false,
                     error: null
                 });
-                return;
-            } catch {
-                // If admin check fails, try user check
-                const userResponse = await axiosInstance.get('/api/user/check');
-                if (!userResponse.data || !userResponse.data.MaKH) {
-                    throw new Error('Invalid user data received');
-                }
-                
-                console.log('User check response:', userResponse.data);
+            } catch (error) {
+                console.error("Auth check failed:", error);
                 set({
-                    user: {
-                        ...userResponse.data,
-                        MaKH: userResponse.data.MaKH // Ensure MaKH is explicitly set
-                    },
-                    isAuthenticated: true,
+                    user: null,
+                    isAuthenticated: false,
                     loading: false,
-                    error: null
+                    error: error.message || 'Authentication failed'
                 });
             }
-        } catch (error: any) {
-            console.error('Auth check error:', error);
-            set({
-                user: null,
-                isAuthenticated: false,
-                loading: false,
-                error: error.message || 'Authentication failed'
-            });
         }
     }
-})); 
+}));
