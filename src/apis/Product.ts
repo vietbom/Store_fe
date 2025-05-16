@@ -93,7 +93,6 @@ interface ProductState {
     loading: boolean;
     error: string | null;
     
-    // Actions
     addProduct: (data: NewProductData) => Promise<Product | void>;
     getProduct: (params: { _id?: string; type?: string }) => Promise<void>;
     getAllProducts: () => Promise<void>;

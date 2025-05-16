@@ -4,7 +4,6 @@ const Introduction: React.FC = () => {
   return (
     <section className="bg-gray-50 py-16">
       <div className="container mx-auto px-6 max-w-7xl">
-        {/* Our Story Section */}
         <div className="grid md:grid-cols-2 gap-12 mb-16 items-center">
           <div className="space-y-6">
             <h2 className="text-4xl font-bold text-gray-900">Câu chuyện của chúng tôi</h2>

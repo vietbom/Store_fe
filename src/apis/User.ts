@@ -9,6 +9,7 @@ interface RegularUser {
   email: string;
   position?: string;
   typeCs?: string;
+  SDT?: string;
 }
 
 interface CartProduct {
@@ -103,7 +104,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   UserLogout: async () => {
     try {
       await axiosInstance.post('/user/logout');
-      set({ authUser: null, cart: null }); // Clear cart on logout
+      set({ authUser: null, cart: null }); 
       return { success: true };
     } catch (error) {
       const err = error as any;
@@ -113,7 +114,6 @@ export const useUserStore = create<UserState>((set, get) => ({
     }
   },
 
-  // Shopping cart functions
   addProductToCart: async (MaSP: string, soLuong: number = 1) => {
     set({ isLoadingCart: true });
     try {
@@ -292,7 +292,6 @@ export const useUserStore = create<UserState>((set, get) => ({
     }
   },
 
-  // Profile management functions
   getProfile: async () => {
     try {
       const res = await axiosInstance.get<RegularUser>('/user/profile');

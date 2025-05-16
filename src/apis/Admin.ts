@@ -38,7 +38,7 @@ export const useAdminStore = create<AdminState>((set) => ({
   adminLogin: async (data: Record<string, any>) => {
     set({ isAdminLogin: true });
     try {
-      const res = await axiosInstance.post<AdminUser>('/admin/login', data); // Expect AdminUser
+      const res = await axiosInstance.post<AdminUser>('/admin/login', data);
       set({ authUserAdmin: res.data });
       return res.data;
     } catch (error) {

@@ -6,8 +6,9 @@ interface User {
     MaKH?: string;
     userName: string;
     email: string;
-    position?: string;  // For admin
-    typeCs?: string;    // For customer
+    position?: string;  
+    typeCs?: string;   
+    SDT?: string;
 }
 
 interface AuthState {
@@ -21,8 +22,8 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-    user: JSON.parse(localStorage.getItem('user') || 'null'),  // Load user data from localStorage
-    isAuthenticated: localStorage.getItem('isAuthenticated') === 'true', // Check if authenticated from localStorage
+    user: JSON.parse(localStorage.getItem('user') || 'null'),
+    isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
     loading: false,
     error: null,
 

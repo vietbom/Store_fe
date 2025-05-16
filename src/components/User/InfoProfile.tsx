@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useUserStore } from '../../apis/User'
 import { useAuthStore } from '../../apis/Auth'
-import { User, Mail, Phone, Edit2, Save, X } from 'lucide-react'
+import { User, Mail, Phone, Edit2, Save, X, ReceiptIcon } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { axiosInstance } from '../../lib/axios'
+import { useNavigate } from 'react-router-dom'
 
 interface UserInfo {
   _id: string;
@@ -22,6 +23,8 @@ const InfoProfile = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [editedInfo, setEditedInfo] = useState<UserInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -98,6 +101,10 @@ const InfoProfile = () => {
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
+  }
+
+  const handleReceipt = () => {
+    navigate('/user/receipt')
   }
 
   return (
@@ -225,6 +232,23 @@ const InfoProfile = () => {
                 <div className="mt-1 text-gray-900 font-medium">
                   {userInfo?.typeCs || 'Thành viên thường'}
                 </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="bg-green-100 p-3 rounded-full">
+                <ReceiptIcon className="text-green-600" size={24} />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-500">
+                  Xem lịch sử mua hàng
+                </label>
+                <button
+                  onClick={handleReceipt}
+                  className="mt-1 text-green-600 font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-green-400 rounded cursor-pointer"
+                >
+                  Hóa đơn
+                </button>
               </div>
             </div>
 

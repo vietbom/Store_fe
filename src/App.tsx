@@ -17,6 +17,8 @@ import SignUp from './components/User/SignUp'
 import ShoppingCartResult from './components/User/ShoppingCartResult'
 import { Toaster } from 'react-hot-toast'
 import InfoProfile from './components/User/InfoProfile'
+import Payment from './components/User/Payment'
+import Receipt from './components/User/Receipt'
 
 function App() {
   const { checkAuth, isAuthenticated, user } = useAuthStore();
@@ -90,6 +92,8 @@ function App() {
             <Route path="home" element={<Loading />} />
             <Route path="profile" element={<InfoProfile />} />
             <Route path="cart" element={<ShoppingCartResult />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="receipt" element={<Receipt />} />
           </Route>
         </Route>
 

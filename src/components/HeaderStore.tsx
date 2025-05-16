@@ -1,97 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Menu, X, ShoppingCart, UserCircle } from 'lucide-react'; 
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import Login from './User/Login';  
+import React, { useState, useEffect } from 'react'
+import { Search, Menu, X, ShoppingCart, UserCircle } from 'lucide-react' 
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import Login from './User/Login'  
 import Sidebar from './User/Sidebar'
-import { useAuthStore } from '../apis/Auth';
-import { useProductStore } from '../apis/Product';
+import { useAuthStore } from '../apis/Auth'
+import { useProductStore } from '../apis/Product'
 
 const HeaderStore: React.FC = () => {
   const navLinkStyle =
-    'text-white uppercase py-3 px-4 text-xs font-semibold tracking-wider hover:bg-red-700 transition-colors duration-150 flex items-center';
-  const separatorStyle = 'border-l border-red-500 h-4 self-center';
-  const sidebarWidthClass = 'w-60';
+    'text-white uppercase py-3 px-4 text-xs font-semibold tracking-wider hover:bg-red-700 transition-colors duration-150 flex items-center'
+  const separatorStyle = 'border-l border-red-500 h-4 self-center'
+  const sidebarWidthClass = 'w-60'
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const { user, isAuthenticated, loading, logout, checkAuth } = useAuthStore();
-  const { getSearchProducts } = useProductStore();
+  const { user, isAuthenticated, loading, logout, checkAuth } = useAuthStore()
+  const { getSearchProducts } = useProductStore()
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    checkAuth()
+  }, [checkAuth])
 
-  // Kiểm tra và chuyển hướng nếu cần
   useEffect(() => {
     if (isAuthenticated && user) {
-      const isAdmin = user.position === 'admin';
-      const isAdminRoute = location.pathname.startsWith('/admin/');
-      const isUserRoute = location.pathname.startsWith('/user/');
+      const isAdmin = user.position === 'admin'
+      const isAdminRoute = location.pathname.startsWith('/admin/')
+      const isUserRoute = location.pathname.startsWith('/user/')
 
       if (isAdmin && !isAdminRoute && !isUserRoute) {
-        // Nếu là admin và đang ở route không phải admin, chuyển về trang admin
-        navigate('/admin/home', { replace: true });
+        navigate('/admin/home', { replace: true })
       } else if (!isAdmin && isAdminRoute) {
-        // Nếu không phải admin và đang ở route admin, chuyển về trang user
-        navigate('/user/home', { replace: true });
+        navigate('/user/home', { replace: true })
       }
     }
-  }, [isAuthenticated, user, location.pathname, navigate]);
+  }, [isAuthenticated, user, location.pathname, navigate])
 
-  const isLoggedIn = isAuthenticated && user;
-  const isAdmin = user?.position === 'admin';
-  const displayName = user ? (user.userName || (user.position === 'admin' ? 'Admin' : 'User')) : '';
+  const isLoggedIn = isAuthenticated && user
+  const isAdmin = user?.position === 'admin'
+  const displayName = user ? (user.userName || (user.position === 'admin' ? 'Admin' : 'User')) : ''
 
-  const toggleDrawer = () => setIsSidebarOpen(!isSidebarOpen);
-  const closeDrawer = () => setIsSidebarOpen(false);
-  const openLoginModal = () => setIsLoginModalOpen(true);
-  const closeLoginModal = () => setIsLoginModalOpen(false);
+  const toggleDrawer = () => setIsSidebarOpen(!isSidebarOpen)
+  const closeDrawer = () => setIsSidebarOpen(false)
+  const openLoginModal = () => setIsLoginModalOpen(true)
+  const closeLoginModal = () => setIsLoginModalOpen(false)
 
   const handleLogout = async () => {
     try {
-      await logout();
-      navigate('/');
-      setIsLoginModalOpen(false);
+      await logout()
+      navigate('/')
+      setIsLoginModalOpen(false)
     } catch (error) {
-      console.error("Logout error in HeaderStore:", error);
+      console.error("Logout error in HeaderStore:", error)
     }
-  };
+  }
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     if (searchTerm.trim()) {
       try {
-        await getSearchProducts(searchTerm.trim());
-        // Chuyển hướng đến route tìm kiếm tương ứng với vai trò
+        await getSearchProducts(searchTerm.trim())
         if (isAdmin) {
-          navigate(`/admin/search?q=${encodeURIComponent(searchTerm.trim())}`);
+          navigate(`/admin/search?q=${encodeURIComponent(searchTerm.trim())}`)
         } else {
-          navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+          navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`)
         }
       } catch (error) {
-        console.error("Search error:", error);
+        console.error("Search error:", error)
       }
     }
-  };
+  }
 
-  const headerTopHeightRem = 4;
-  const headerBottomHeightRem = 2.75;
-  const totalHeaderHeightRem = headerTopHeightRem + headerBottomHeightRem;
-  const headerTopOffsetPx = totalHeaderHeightRem * 16;
+  const headerTopHeightRem = 4
+  const headerBottomHeightRem = 2.75
+  const totalHeaderHeightRem = headerTopHeightRem + headerBottomHeightRem
+  const headerTopOffsetPx = totalHeaderHeightRem * 16
 
   if (loading) {
     return (
       <header className="sticky top-0 z-40 bg-white shadow-sm h-[calc(4rem+2.75rem)] flex items-center justify-center">
         <div>Đang tải...</div>
       </header>
-    );
+    )
   }
 
-  // Render phần header trên cùng cho admin
   if (isAdmin) {
     return (
       <header className="sticky top-0 z-40 bg-white shadow-sm">
@@ -126,7 +121,7 @@ const HeaderStore: React.FC = () => {
           </div>
         </div>
       </header>
-    );
+    )
   }
 
   return (
@@ -218,7 +213,7 @@ const HeaderStore: React.FC = () => {
 
       {!isLoggedIn && isLoginModalOpen && <Login isOpen={isLoginModalOpen} onClose={closeLoginModal} />}
     </>
-  );
-};
+  )
+}
 
-export default HeaderStore;
+export default HeaderStore

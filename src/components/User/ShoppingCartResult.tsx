@@ -11,6 +11,20 @@ const ShoppingCartResult = () => {
     const [error, setError] = useState<string | null>(null)
     const navigate = useNavigate()
 
+    const [selectedItems, setSelectedItems] = useState<string[]>([])
+    const handleSelectItem = (MaSP: string) => {
+        setSelectedItems(prev =>
+            prev.includes(MaSP)
+                ? prev.filter(id => id !== MaSP)
+                : [...prev, MaSP]
+        )
+    }
+    const handleSelectAll = () => {
+        if (!cart) return
+        const allIds = cart.products.map(p => p.product.MaSP)
+        setSelectedItems(prev => (prev.length === allIds.length ? [] : allIds))
+    }
+
     useEffect(() => {
         const fetchCart = async () => {
             try {
@@ -40,14 +54,16 @@ const ShoppingCartResult = () => {
     }, [user, isAuthenticated, getCart]);
 
     useEffect(() => {
-        console.log('Cart state:', cart);
         if (cart) {
             const newTotal = cart.products.reduce((sum, item) => {
-                return sum + (item.product.price * item.soLuong)
-            }, 0)
-            setTotal(newTotal)
+                if (selectedItems.includes(item.product.MaSP)) {
+                    return sum + item.product.price * item.soLuong;
+                }
+                return sum;
+            }, 0);
+            setTotal(newTotal);
         }
-    }, [cart])
+    }, [cart, selectedItems]);
 
     const handleUpdateQuantity = async (MaSP: string, currentSoLuong: number, increment: boolean) => {
         try {
@@ -178,6 +194,12 @@ const ShoppingCartResult = () => {
                         <div className="divide-y divide-gray-200">
                             {cart.products.map((item) => (
                                 <div key={item.product._id} className="p-6 flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="mr-4 w-5 h-5 accent-green-600"
+                                        checked={selectedItems.includes(item.product.MaSP)}
+                                        onChange={() => handleSelectItem(item.product.MaSP)}
+                                    />                                    
                                     {/* Hình ảnh sản phẩm */}
                                     <div className="w-24 h-24 flex-shrink-0">
                                         <img
@@ -264,7 +286,9 @@ const ShoppingCartResult = () => {
                             </div>
                         </div>
                         <button
-                            onClick={() => navigate('/checkout')}
+                            onClick={() => navigate('/user/payment', 
+                                {state: { selectedItems: cart.products.filter(item => selectedItems.includes(item.product.MaSP)) }
+                            }) }
                             className="w-full mt-6 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
                         >
                             Tiến hành thanh toán

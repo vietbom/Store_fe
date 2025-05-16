@@ -21,7 +21,6 @@ const AdminSearchResult: React.FC = () => {
             try {
                 setIsDeleting(productId);
                 await delProduct(productId);
-                // Refresh search results after deletion
                 if (searchTerm) {
                     await getSearchProducts(searchTerm);
                 }
